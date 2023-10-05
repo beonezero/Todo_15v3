@@ -1,7 +1,7 @@
 import {ResponseType} from "../api/todolists-api";
 import {setAppError, setAppStatus, SetErrorType, SetStatusType} from "../app/app-reducer";
 import {Dispatch} from "redux";
-import {ActionsType} from "../features/TodolistsList/tasks-reducer";
+import {TasksActionsType} from "../features/TodolistsList/tasks-reducer";
 export const handleServerAppError = <D>(data: ResponseType<D>, dispatch: Dispatch<SetErrorType | SetStatusType>) => {
     if (data.messages.length) {
         dispatch(setAppError(data.messages[0]))
