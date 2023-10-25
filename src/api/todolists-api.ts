@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios'
+import {FormikType} from "../features/Login/Login";
 
 const instance = axios.create({
     baseURL: 'https://social-network.samuraijs.com/api/1.1/',
@@ -7,8 +8,13 @@ const instance = axios.create({
         'API-KEY': 'e318d0fb-ce59-4c2b-827b-0e3b18b76493'
     }
 })
-
 // api
+
+export const auth = {
+    authorization(data: FormikType) {
+        return instance.post<null, AxiosResponse<ResponseType<{userId: number}>>, FormikType>('auth/login', data);
+    }
+}
 export const todolistsAPI = {
     getTodolists() {
         return instance.get<TodolistType[]>('todo-lists');

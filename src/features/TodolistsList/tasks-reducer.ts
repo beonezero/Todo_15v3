@@ -73,7 +73,7 @@ export const addTaskTC = (title: string, todolistId: string): ThunkAction<void, 
         .then(res => {
             if (res.data.resultCode === 0) {
                 const task = res.data.data.item
-                //dispatch(addTaskAC(task))
+                dispatch(addTaskAC(task))
                 dispatch(setAppStatus("succeeded"))
             } else {
                 if (res.data.messages.length) {
