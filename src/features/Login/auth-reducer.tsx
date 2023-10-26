@@ -1,5 +1,11 @@
 import {Dispatch} from 'redux'
-import {setAppError, setAppStatus, SetErrorType, SetStatusType} from '../../app/app-reducer'
+import {
+    setAppStatus,
+    SetErrorType,
+    SetInitialized,
+    setIsInitialized,
+    SetStatusType
+} from '../../app/app-reducer'
 import {FormikType} from "./Login";
 import {auth} from "../../api/todolists-api";
 import {handleServerAppError, handleServerNetworkError} from "../../utils/error-utils";
@@ -28,7 +34,7 @@ export const loginTC = (data: FormikType) => async (dispatch: Dispatch<ActionsTy
         const res = await auth.authorization(data)
         if (res.data.resultCode === 0) {
             dispatch(setIsLoggedInAC(true))
-            setAppStatus("succeeded")
+            dispatch(setAppStatus("succeeded"))
         } else {
             handleServerAppError(res.data, dispatch)
         }
@@ -38,5 +44,39 @@ export const loginTC = (data: FormikType) => async (dispatch: Dispatch<ActionsTy
 
 }
 
+export const meTC = () => async (dispatch: Dispatch<ActionsType>) => {
+    dispatch(setAppStatus('loading'))
+    try {
+        const res = await auth.me()
+        if (res.data.resultCode === 0) {
+            dispatch(setIsLoggedInAC(true))
+            dispatch(setAppStatus("succeeded"))
+        } else {
+            handleServerAppError(res.data, dispatch)
+        }
+    }
+    catch (e) {
+        handleServerNetworkError((e as {message: string}), dispatch)
+    }
+    finally {
+        dispatch(setIsInitialized(true))
+    }
+}
+
+export const logOutTC = (data: FormikType) => async (dispatch: Dispatch<ActionsType>) => {
+    dispatch(setAppStatus('loading'))
+    try {
+        const res = await auth.logOut()
+        if (res.data.resultCode === 0) {
+            dispatch(setIsLoggedInAC(false))
+            dispatch(setAppStatus("succeeded"))
+        } else {
+            handleServerAppError(res.data, dispatch)
+        }
+    } catch (e) {
+        handleServerNetworkError((e as {message: string}), dispatch)
+    }
+
+}
 // types
-type ActionsType = ReturnType<typeof setIsLoggedInAC> | SetStatusType | SetErrorType
+type ActionsType = ReturnType<typeof setIsLoggedInAC> | SetStatusType | SetErrorType | SetInitialized
