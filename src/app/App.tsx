@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useCallback, useEffect} from 'react'
 import './App.css'
 import {TodolistsList} from '../features/TodolistsList/TodolistsList'
 import AppBar from '@mui/material/AppBar';
@@ -14,17 +14,23 @@ import {useAppDispatch, useAppSelector} from "./store";
 import {RequestStatusType} from "./app-reducer";
 import {Navigate, Route, Routes} from "react-router-dom";
 import {Login} from "../features/Login/Login";
-import {meTC} from "../features/Login/auth-reducer";
+import {logoutTC, meTC} from "../features/Login/auth-reducer";
 
 
 function App() {
     const status = useAppSelector<RequestStatusType>((state) => state.app.status)
     const isInitialized = useAppSelector<boolean>((state) => state.app.isInitialized)
+    const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn)
     const dispatch = useAppDispatch()
 
     useEffect(() => {
         dispatch(meTC())
     },[])
+
+    const logoutHandler = useCallback(() => {
+        dispatch(logoutTC())
+    },[])
+
     if (!isInitialized){
         return <div style={{position: "fixed", top: "30%", textAlign: "center", width: "100%"}}>
             <CircularProgress/>
@@ -40,7 +46,7 @@ function App() {
                     <Typography variant="h6">
                         News
                     </Typography>
-                    <Button color="inherit">Login</Button>
+                    {isLoggedIn && <Button onClick={logoutHandler} color="inherit">Log out</Button>}
                 </Toolbar>
             </AppBar>
             {status === "loading" && <CircularProgress/>}

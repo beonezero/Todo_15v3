@@ -63,7 +63,7 @@ export const meTC = () => async (dispatch: Dispatch<ActionsType>) => {
     }
 }
 
-export const logOutTC = (data: FormikType) => async (dispatch: Dispatch<ActionsType>) => {
+export const logoutTC = () => async (dispatch: Dispatch<ActionsType>) => {
     dispatch(setAppStatus('loading'))
     try {
         const res = await auth.logOut()
